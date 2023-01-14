@@ -1,3 +1,5 @@
+import UI from '@/components/UI';
+
 export default function Articles() {
-  return <p>Hello</p>
+  return <UI>Hello</UI>;
 }
