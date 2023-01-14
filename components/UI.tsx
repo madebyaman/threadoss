@@ -40,7 +40,7 @@ export default function UI({ children }: { children: ReactNode }) {
                       <Logo className="hidden lg:block h-8 w-8" />
                       {/* <img
                         className="hidden lg:block h-8 w-auto"
-                        src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg"
+                        src="https://tailwindui.com/img/logos/workflow-logo-rose-600-mark-gray-800-text.svg"
                         alt="Workflow"
                       /> */}
                     </div>
@@ -51,9 +51,9 @@ export default function UI({ children }: { children: ReactNode }) {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? 'border-indigo-500 text-gray-900'
+                              ? 'border-rose-500 text-gray-900'
                               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                            'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium'
+                            'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-semibold font-sans'
                           )}
                           aria-current={item.current ? 'page' : undefined}
                         >
@@ -65,7 +65,7 @@ export default function UI({ children }: { children: ReactNode }) {
                   <div className="hidden sm:ml-6 sm:flex sm:items-center">
                     <Menu as="div" className="ml-3 relative">
                       <div>
-                        <Menu.Button className="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <Menu.Button className="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
                           <span className="sr-only">Open user menu</span>
                           <Image
                             className="h-8 w-8 rounded-full"
@@ -93,7 +93,7 @@ export default function UI({ children }: { children: ReactNode }) {
                                   href={item.href}
                                   className={classNames(
                                     active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
+                                    'block px-4 py-2 text-sm text-gray-500 font-semibold font-sans'
                                   )}
                                 >
                                   {item.name}
@@ -107,7 +107,7 @@ export default function UI({ children }: { children: ReactNode }) {
                   </div>
                   <div className="-mr-2 flex items-center sm:hidden">
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XMarkIcon
@@ -134,9 +134,9 @@ export default function UI({ children }: { children: ReactNode }) {
                       href={item.href}
                       className={classNames(
                         item.current
-                          ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
-                          : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800',
-                        'block pl-3 pr-4 py-2 border-l-4 text-base font-medium'
+                          ? 'bg-rose-50 border-rose-500 text-rose-700'
+                          : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800',
+                        'block pl-3 pr-4 py-2 border-l-4 text-base font-semibold font-sans'
                       )}
                       aria-current={item.current ? 'page' : undefined}
                     >
@@ -156,10 +156,10 @@ export default function UI({ children }: { children: ReactNode }) {
                       />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium text-gray-800">
+                      <div className="text-base font-semibold font-sans text-gray-700">
                         {user.name}
                       </div>
-                      <div className="text-sm font-medium text-gray-500">
+                      <div className="text-sm font-semibold font-sans text-gray-500">
                         {user.email}
                       </div>
                     </div>
@@ -170,7 +170,7 @@ export default function UI({ children }: { children: ReactNode }) {
                         key={item.name}
                         as="a"
                         href={item.href}
-                        className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                        className="block px-4 py-2 text-base font-semibold font-sans text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                       >
                         {item.name}
                       </Disclosure.Button>
@@ -185,7 +185,7 @@ export default function UI({ children }: { children: ReactNode }) {
         <div className="py-10">
           <header>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold leading-tight text-gray-900">
+              <h1 className="text-2xl md:text-4xl font-black leading-tight text-gray-800 font-sans">
                 Dashboard
               </h1>
             </div>
