@@ -1,8 +1,8 @@
-import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Fragment, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import Logo from './logo';
 import LogoSmall from './logo_small';
 
@@ -22,7 +22,13 @@ function classNames(...classes: string[]): string {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function UI({ children }: { children: ReactNode }) {
+export default function UI({
+  children,
+  title,
+}: {
+  children: ReactNode;
+  title: string;
+}) {
   return (
     <>
       <div className="min-h-full">
@@ -47,7 +53,9 @@ export default function UI({ children }: { children: ReactNode }) {
                           key={item.name}
                           href={item.href}
                           className={classNames(
-                            item.current ? 'bg-slate-100' : 'hover:bg-slate-50',
+                            item.current
+                              ? 'bg-indigo-100 text-indigo-900'
+                              : 'hover:bg-slate-100',
                             'inline-flex text-gray-900 items-center px-3 py-1 rounded-full text-sm font-medium font-sans'
                           )}
                           aria-current={item.current ? 'page' : undefined}
@@ -57,7 +65,7 @@ export default function UI({ children }: { children: ReactNode }) {
                       ))}
                     </div>
                   </div>
-                  <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                  <div className="hidden sm:flex sm:items-center">
                     <Image
                       className="h-8 w-8 rounded-full"
                       src={user.imageUrl}
@@ -94,7 +102,9 @@ export default function UI({ children }: { children: ReactNode }) {
                       as={Link}
                       href={item.href}
                       className={classNames(
-                        item.current ? 'bg-slate-100' : 'hover:bg-slate-50',
+                        item.current
+                          ? 'bg-indigo-100 text-indigo-900'
+                          : 'hover:bg-slate-100',
                         'block pl-3 pr-4 py-2 rounded-full text-base font-medium text-center text-gray-900 font-sans'
                       )}
                       aria-current={item.current ? 'page' : undefined}
@@ -132,15 +142,15 @@ export default function UI({ children }: { children: ReactNode }) {
         <div className="py-10">
           <header>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h1 className="text-2xl md:text-4xl font-black leading-tight text-gray-800 font-sans">
-                Dashboard
+              <h1 className="text-2xl md:text-4xl font-black leading-tight text-gray-800 font-sans py-4 border-b-2">
+                {title}
               </h1>
             </div>
           </header>
           <main>
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
               {/* Replace with your content */}
-              {children}
+              <div className="py-4">{children}</div>
               {/* /End replace */}
             </div>
           </main>
