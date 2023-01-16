@@ -1,7 +1,7 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import { Montserrat } from '@next/font/google';
-const montserrat = Montserrat({
+import { Open_Sans } from '@next/font/google';
+const openSans = Open_Sans({
   subsets: ['latin'],
   variable: '--font-display',
   display: 'optional',
@@ -9,7 +9,7 @@ const montserrat = Montserrat({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className={`${montserrat.variable} 'font-serif'`}>
+    <div className={`${openSans.variable} 'font-serif'`}>
       <Component {...pageProps} />
     </div>
   );
