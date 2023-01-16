@@ -33,6 +33,7 @@ export default function UI({
   if (user) {
     const { name, email } = user;
     invariant(name, 'User name not defined');
+    console.log(user);
 
     return (
       <>
