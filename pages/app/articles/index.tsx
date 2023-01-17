@@ -1,27 +1,33 @@
 import UI from '@/components/UI';
+import { useArticleCount } from '@/lib/useArticleCount';
+import { useArticles } from '@/lib/useArticles';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { FormEvent, MouseEvent, useRef, useState } from 'react';
 
 export default function Articles() {
-  const articles = [
-    { title: 'Hello world', url: 'https://google.com', dateAdded: new Date() },
-    {
-      title: 'There is a name for bond',
-      url: 'https://google.com',
-      dateAdded: new Date(),
-    },
-    { title: 'Boss Baby', url: 'https://google.com', dateAdded: new Date() },
-    {
-      title:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique, quae dolores rerum quod et vero provident alias aliquam dignissimos? Fugiat quidem veniam vero ratione rem. Mollitia consequatur esse porro delectus?',
-      url: 'https://google.com',
-      dateAdded: new Date(),
-    },
-    {
-      title: ':has is very bad selector',
-      url: 'https://google.com',
-      dateAdded: new Date(),
-    },
-  ];
+  const { articles, isLoading, error } = useArticles();
+  const { count } = useArticleCount();
+  const [lastItemIndex, setLastItemIndex] = useState<Number | null>(null);
+
+  function setArticles(e: MouseEvent, type: 'PREVIOUS' | 'NEXT') {
+    e.preventDefault();
+    if (!articles) return;
+    if (type === 'PREVIOUS') {
+      setLastItemIndex(articles[0].id);
+    }
+    if (type === 'NEXT') {
+      setLastItemIndex(articles[articles.length - 1].id);
+    }
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error || !articles) {
+    return <div>Error</div>;
+  }
+
   return (
     <UI title="Articles">
       <div className="font-sans">
@@ -90,7 +96,7 @@ export default function Articles() {
                           {article.url}
                         </td>
                         <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
-                          {article.dateAdded.toLocaleDateString()}
+                          {article.createdAt.toLocaleDateString()}
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <a
@@ -112,22 +118,22 @@ export default function Articles() {
                     <p className="text-sm text-gray-700">
                       Showing <span className="font-medium">1</span> to{' '}
                       <span className="font-medium">10</span> of{' '}
-                      <span className="font-medium">20</span> results
+                      <span className="font-medium">{count}</span> results
                     </p>
                   </div>
                   <div className="flex-1 flex justify-between sm:justify-end">
-                    <a
-                      href="#"
+                    <button
                       className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                      onClick={(e) => setArticles(e, 'PREVIOUS')}
                     >
                       Previous
-                    </a>
-                    <a
-                      href="#"
+                    </button>
+                    <button
+                      onClick={(e) => setArticles(e, 'NEXT')}
                       className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                     >
                       Next
-                    </a>
+                    </button>
                   </div>
                 </nav>
               </div>

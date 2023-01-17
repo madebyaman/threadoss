@@ -28,7 +28,7 @@ export default function UI({
   const { user, error, isLoading } = useUser();
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error.message}</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   if (user) {
     const { name, email } = user;
@@ -174,6 +174,7 @@ export default function UI({
 
   return (
     <div className="font-sans">
+      Hello
       <Link href="/api/auth/login">Login</Link>
     </div>
   );

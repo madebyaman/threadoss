@@ -6,6 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
  * Get all user articles. For pagination pass `cursor` with id of the last element.
  */
 async function getAllUserArticles(req: NextApiRequest, res: NextApiResponse) {
+  const { cursor } = req.query;
   const session = await getSession(req, res);
   const user = session?.user;
   if (!user || !user.sub) {
@@ -14,7 +15,11 @@ async function getAllUserArticles(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     const userArticles = await prisma.article.findMany({
-      take: 10,
+      take: Number(cursor) < 0 ? -10 : 10,
+      skip: 1,
+      cursor: {
+        id: Math.abs(Number(cursor)),
+      },
       where: {
         authorId: user.sub,
       },
