@@ -11,6 +11,12 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 async function addArticle(req: NextApiRequest, res: NextApiResponse) {
+  // Check if request is 'POST'
+  if (req.method !== 'POST') {
+    res.status(405);
+    res.json({ error: 'Method not allowed' });
+    return;
+  }
   const { url, totalTweets } = req.body;
   if (typeof url !== 'string' || !totalTweets) {
     return res.status(500).json({ error: 'Data not provided' });

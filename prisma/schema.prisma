@@ -10,21 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String    @unique
-  createdAt DateTime  @default(now())
-  email     String    @unique
-  Article   Article[]
-  Thread    Thread[]
-}
-
 model Article {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   url       String   @unique
   title     String
   content   String
-  author    User     @relation(fields: [authorId], references: [id])
   authorId  String
   Thread    Thread[]
 }
@@ -35,6 +26,5 @@ model Thread {
   content   String
   article   Article  @relation(fields: [articleId], references: [id])
   articleId Int
-  author    User     @relation(fields: [authorId], references: [id])
   authorId  String
 }
