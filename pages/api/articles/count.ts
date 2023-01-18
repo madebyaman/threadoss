@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 /**
@@ -10,8 +9,7 @@ async function getAllUserArticlesCount(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession(req, res);
-  const user = session?.user;
+  const { user } = req as any;
   if (!user || !user.sub) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
@@ -29,4 +27,4 @@ async function getAllUserArticlesCount(
   }
 }
 
-export default withApiAuthRequired(getAllUserArticlesCount);
+export default getAllUserArticlesCount;

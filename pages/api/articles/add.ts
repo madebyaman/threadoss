@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { ArticleData, extract } from '@extractus/article-extractor';
 import { Article } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -21,8 +20,7 @@ async function addArticle(req: NextApiRequest, res: NextApiResponse) {
   if (typeof url !== 'string' || !totalTweets) {
     return res.status(500).json({ error: 'Data not provided' });
   }
-  const session = await getSession(req, res);
-  const user = session?.user;
+  const { user } = req as any;
   if (!user || !user.sub) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
@@ -118,4 +116,4 @@ async function addArticle(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withApiAuthRequired(addArticle);
+export default addArticle;

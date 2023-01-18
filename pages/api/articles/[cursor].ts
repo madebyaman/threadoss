@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 /**
@@ -7,8 +6,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
  */
 async function getAllUserArticles(req: NextApiRequest, res: NextApiResponse) {
   const { cursor } = req.query;
-  const session = await getSession(req, res);
-  const user = session?.user;
+  // const session = await getSession(req, res);
+  const { user }: any = req;
   if (!user || !user.sub) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
@@ -34,4 +33,4 @@ async function getAllUserArticles(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withApiAuthRequired(getAllUserArticles);
+export default getAllUserArticles;
