@@ -11,11 +11,13 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  username  String    @unique
-  articles  Article[]
-  threads   Thread[]
+  id           Int       @id @default(autoincrement())
+  createdAt    DateTime  @default(now())
+  username     String    @unique
+  token        String
+  codeVerifier String
+  articles     Article[]
+  threads      Thread[]
 }
 
 model Article {
@@ -24,8 +26,8 @@ model Article {
   url       String   @unique
   title     String
   content   String
-  user      User     @relation(fields: [authorId], references: [username])
-  authorId  String
+  user      User     @relation(fields: [authorId], references: [id])
+  authorId  Int
   threads   Thread[]
 }
 
@@ -35,6 +37,6 @@ model Thread {
   content   String
   article   Article  @relation(fields: [articleId], references: [id])
   articleId Int
-  user      User     @relation(fields: [authorId], references: [username])
-  authorId  String
+  user      User     @relation(fields: [authorId], references: [id])
+  authorId  Int
 }

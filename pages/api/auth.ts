@@ -12,19 +12,19 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   // store verifier in cookie
   const token = jwt.sign(
     {
-      code: codeVerifier,
+      codeVerifier,
       token: state,
       time: Date.now(),
     },
     process.env.PRIVATE_KEY || 'secret',
-    { expiresIn: '8h' }
+    { expiresIn: '1h' }
   );
 
   res.setHeader(
     'Set-Cookie',
     cookie.serialize('THREADOSS_TEMP_TOKEN', token, {
       httpOnly: true,
-      maxAge: 8 * 60 * 60,
+      maxAge: 1 * 60 * 60,
       path: '/',
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
