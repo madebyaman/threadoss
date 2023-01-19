@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { twitterClient } from '@/lib/twitterClient';
 import { NextApiRequest, NextApiResponse } from 'next';
-import process from 'process';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import cookie from 'cookie';
 import { UserV2 } from 'twitter-api-v2';
@@ -46,7 +45,7 @@ export default async function Callback(
   }
 
   if (!data) {
-    return res.status(500).json({ error: 'Twitter not sent data' });
+    return res.status(500).json({ error: 'Twitter error' });
   }
   // Use the data to create a new profile
   try {
@@ -62,7 +61,6 @@ export default async function Callback(
       { expiresIn: '8h' }
     );
 
-    console.log('setting cookies');
     res.setHeader('Set-Cookie', [
       cookie.serialize('THREADOSS_TOKEN', token, {
         httpOnly: true,
@@ -73,7 +71,6 @@ export default async function Callback(
       }),
       'THREADOSS_TEMP_TOKEN=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Secure; HttpOnly',
     ]);
-    console.log('cookies set');
   } catch (e) {
     return res.status(500).json({ error: 'DB error' });
   }
