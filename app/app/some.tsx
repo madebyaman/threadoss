@@ -3,9 +3,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import Logo from './logo';
-import LogoSmall from './logo_small';
-import invariant from 'tiny-invariant';
+import Logo from '../logo';
+import LogoSmall from '../logo_small';
 
 const navigation = [
   { name: 'Articles', href: '#', current: true },
@@ -17,16 +16,23 @@ function classNames(...classes: string[]): string {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function UI({
+async function getUserProfile() {
+  const res = await fetch('/api/user/profile');
+  if (!res.ok) {
+    throw new Error('Failed to fetch article count');
+  }
+  const result = await res.json();
+  return result.result;
+}
+
+export default async function UI({
   children,
   title,
 }: {
   children: ReactNode;
   title: string;
 }) {
-  const { name, email } = user;
-  invariant(name, 'User name not defined');
-  console.log(user);
+  const { name, email, username, picture } = await getUserProfile();
 
   return (
     <>
@@ -65,10 +71,10 @@ export default function UI({
                     </div>
                   </div>
                   <div className="hidden sm:flex sm:items-center">
-                    {user.picture && (
+                    {picture && (
                       <Image
                         className="h-8 w-8 rounded-full"
-                        src={user.picture}
+                        src={picture}
                         height={32}
                         width={32}
                         alt={name}
@@ -117,10 +123,10 @@ export default function UI({
                 <div className="pt-4 pb-3 border-t border-gray-200">
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
-                      {user.picture && (
+                      {picture && (
                         <Image
                           className="rounded-full"
-                          src={user.picture}
+                          src={picture}
                           height={40}
                           width={40}
                           alt={name}
@@ -129,11 +135,11 @@ export default function UI({
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-semibold font-sans text-gray-700">
-                        {user.name}
+                        {name}
                       </div>
-                      {user.email && (
+                      {email && (
                         <div className="text-sm font-semibold font-sans text-gray-500">
-                          {user.email}
+                          {email}
                         </div>
                       )}
                     </div>

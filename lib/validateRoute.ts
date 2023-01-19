@@ -19,6 +19,7 @@ export const validateRoute = (
     const { THREADOSS_TOKEN: token } = req.cookies;
 
     if (token) {
+      console.log('token found>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       let user; // user is declared. So it remains in the scope of this if.
 
       try {
@@ -43,6 +44,7 @@ export const validateRoute = (
 
       return handler(req, res, user);
     }
+    console.log('no token>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.');
     res.status(401);
     res.json({ error: 'Not authorized' });
     return;

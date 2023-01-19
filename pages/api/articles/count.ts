@@ -1,4 +1,6 @@
 import { prisma } from '@/lib/prisma';
+import { validateRoute } from '@/lib/validateRoute';
+import { User } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 /**
@@ -7,24 +9,20 @@ import { NextApiRequest, NextApiResponse } from 'next';
  */
 async function getAllUserArticlesCount(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
+  user: User
 ) {
-  const { user } = req as any;
-  if (!user || !user.sub) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
+  console.log('reached here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   try {
     const count = await prisma.article.count({
       where: {
-        authorId: user.sub,
+        authorId: user.id,
       },
     });
     return res.status(200).json({ result: count });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({ error: 'Server not provided' });
   }
 }
 
-export default getAllUserArticlesCount;
+export default validateRoute(getAllUserArticlesCount);

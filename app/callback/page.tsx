@@ -1,10 +1,12 @@
-import { useRouter } from 'next/router';
+'use client';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function Callback() {
-  const router = useRouter();
   const [userVerified, setUserVerified] = useState(false);
-  const { state, code } = router.query;
+  const searchParams = useSearchParams();
+  const state = searchParams.get('state');
+  const code = searchParams.get('code');
 
   useEffect(() => {
     let controller = new AbortController();
@@ -27,5 +29,5 @@ export default function Callback() {
     return () => controller.abort();
   }, [code, state]);
 
-  return <div>{userVerified ? 'Success' : 'Loading...'}</div>;
+  return <div>{userVerified ? 'success' : 'Loading...'}</div>;
 }
