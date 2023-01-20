@@ -16,7 +16,11 @@ export const validateRoute = (
   handler: (req: NextApiRequest, res: NextApiResponse, user: User) => void
 ) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
-    const token = req.headers.authorization;
+    let token = null;
+    token = req.headers.authorization;
+    if (!token) {
+      token = req.cookies.THREADOSS_TOKEN;
+    }
 
     if (token) {
       let user; // user is declared. So it remains in the scope of this if.

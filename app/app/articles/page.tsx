@@ -107,14 +107,17 @@ export default async function Articles() {
                         scope="col"
                         className="relative py-3.5 pl-3 pr-4 sm:pr-6"
                       >
-                        <span className="sr-only">Generate new thread</span>
+                        <span className="sr-only">View</span>
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {articles.map((article) => (
                       <tr key={article.title}>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:px-6">
+                        <td
+                          className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:px-6"
+                          title={article.title}
+                        >
                           {article.title.length > 75
                             ? article.title.substring(0, 75) + '...'
                             : article.title}
@@ -122,15 +125,18 @@ export default async function Articles() {
                         <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
                           {article.url}
                         </td>
-                        <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
-                          {article.createdAt.toLocaleDateString()}
+                        <td
+                          className="whitespace-nowrap px-4 py-4 text-sm text-gray-500"
+                          title={new Date(article.createdAt).toTimeString()}
+                        >
+                          {new Date(article.createdAt).toLocaleDateString()}
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <a
                             href="#"
                             className="text-indigo-600 hover:text-indigo-900"
                           >
-                            Regenerate thread
+                            View
                           </a>
                         </td>
                       </tr>
@@ -165,13 +171,13 @@ export default async function Articles() {
                 </nav>
               </div>
             ) : (
-              <div className="bg-white p-4 py-16">
+              <div className="bg-white rounded shadow-sm p-4 py-16">
                 <h4 className="text-center text-xl font-semibold">
-                  Start converting your articles to thread ✏️
+                  No Articles
                 </h4>
                 <p className="mt-2 text-center text-sm">
                   Click on New Article button to start generating twitter
-                  threads.
+                  threads ✏️
                 </p>
                 <div className="block text-center my-4">
                   <Link

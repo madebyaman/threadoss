@@ -13,7 +13,7 @@ const navigation = [
   { name: 'Sign out', href: '/api/auth/logout', current: false },
 ];
 
-function classNames(...classes: string[]): string {
+export function classNames(...classes: string[]): string {
   return classes.filter(Boolean).join(' ');
 }
 

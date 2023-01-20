@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
+import { validateRoute } from '@/lib/validateRoute';
 import { ArticleData, extract } from '@extractus/article-extractor';
-import { Article } from '@prisma/client';
+import { Article, User } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Configuration, OpenAIApi } from 'openai';
 
@@ -9,7 +10,11 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-async function addArticle(req: NextApiRequest, res: NextApiResponse) {
+async function addArticle(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  user: User
+) {
   // Check if request is 'POST'
   if (req.method !== 'POST') {
     res.status(405);
@@ -20,16 +25,12 @@ async function addArticle(req: NextApiRequest, res: NextApiResponse) {
   if (typeof url !== 'string' || !totalTweets) {
     return res.status(500).json({ error: 'Data not provided' });
   }
-  const { user } = req as any;
-  if (!user || !user.sub) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
 
   // Check if Article with same URL exists
   try {
     const alreadyPresentArticle = await prisma.article.findFirst({
       where: {
-        AND: [{ url }, { authorId: user.sub }],
+        AND: [{ url }, { authorId: user.id }],
       },
     });
     if (alreadyPresentArticle) {
@@ -55,7 +56,7 @@ async function addArticle(req: NextApiRequest, res: NextApiResponse) {
     }
     newArticle = await prisma.article.create({
       data: {
-        authorId: user.sub,
+        authorId: user.id,
         url,
         content: article.content,
         title: article.title,
@@ -91,6 +92,7 @@ async function addArticle(req: NextApiRequest, res: NextApiResponse) {
     if (completion.data.choices && completion.data.choices[0].text)
       result = completion.data.choices[0].text;
   } catch (e) {
+    console.log(e);
     res.status(500).json({
       error: 'An error occurred during your request.',
     });
@@ -104,7 +106,7 @@ async function addArticle(req: NextApiRequest, res: NextApiResponse) {
     const thread = await prisma.thread.create({
       data: {
         content: result,
-        authorId: user.sub,
+        authorId: user.id,
         articleId: newArticle.id,
       },
     });
@@ -116,4 +118,4 @@ async function addArticle(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default addArticle;
+export default validateRoute(addArticle);
