@@ -1,7 +1,7 @@
 'use client';
 
 import { Disclosure } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import Logo from './logo';
@@ -61,9 +61,7 @@ export default function Nav({ name, username, picture }: NavProps) {
                     alt={name}
                   />
                 ) : (
-                  <span className="h-8 w-8 rounded-full bg-indigo-700 grid place-items-center text-xl uppercase font-bold text-gray-100">
-                    {name.substring(1, -1)}
-                  </span>
+                  <UserIcon className="h-8 w-8 bg-indigo-700 rounded-full text-gray-100 p-1" />
                 )}
               </div>
               <div className="-mr-2 flex items-center sm:hidden">
@@ -111,9 +109,7 @@ export default function Nav({ name, username, picture }: NavProps) {
                       alt={name}
                     />
                   ) : (
-                    <span className="h-8 w-8 rounded-full bg-indigo-700 grid place-items-center text-xl uppercase font-bold text-gray-100">
-                      {name.substring(1, -1)}
-                    </span>
+                    <UserIcon className="h-8 w-8 bg-indigo-700 rounded-full text-gray-100 p-1" />
                   )}
                 </div>
                 <div className="ml-3">
