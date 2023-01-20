@@ -12,7 +12,6 @@ async function getAllUserArticlesCount(
   res: NextApiResponse,
   user: User
 ) {
-  console.log('reached here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   try {
     const count = await prisma.article.count({
       where: {

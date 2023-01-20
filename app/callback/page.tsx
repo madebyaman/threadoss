@@ -10,7 +10,8 @@ export default function Callback() {
 
   useEffect(() => {
     let controller = new AbortController();
-    fetch('/api/callback', {
+    fetch(`/api/callback`, {
+      credentials: 'include',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,20 +1,21 @@
 import { prisma } from '@/lib/prisma';
+import { validateRoute } from '@/lib/validateRoute';
+import { User } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 /**
  * Get all user articles. For pagination pass `cursor` with id of the last element.
  */
-async function getAllUserArticles(req: NextApiRequest, res: NextApiResponse) {
-  const { user } = req as any;
-  if (!user || !user.sub) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
+async function getAllUserArticles(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  user: User
+) {
   try {
     const userArticles = await prisma.article.findMany({
       take: 10,
       where: {
-        authorId: user.sub,
+        authorId: user.id,
       },
       orderBy: {
         id: 'asc',
@@ -27,4 +28,4 @@ async function getAllUserArticles(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default getAllUserArticles;
+export default validateRoute(getAllUserArticles);

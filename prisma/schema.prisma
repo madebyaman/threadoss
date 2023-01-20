@@ -14,6 +14,8 @@ model User {
   id           Int       @id @default(autoincrement())
   createdAt    DateTime  @default(now())
   username     String    @unique
+  name         String
+  pictureUrl   String?
   token        String
   codeVerifier String
   articles     Article[]

@@ -1,8 +1,16 @@
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Article } from '@prisma/client';
+import { cookies } from 'next/headers';
 
 async function getTotalArticleCount() {
-  const res = await fetch(`${process.env.BASE_URL}/api/articles/count`);
+  const cookieInstance = cookies();
+  const authorization = cookieInstance.get('THREADOSS_TOKEN');
+  if (!authorization) return 0;
+  const res = await fetch(`${process.env.BASE_URL}/api/articles/count`, {
+    headers: {
+      authorization: authorization.value,
+    },
+  });
   if (!res.ok) {
     throw new Error('Failed to fetch article count');
   }
@@ -10,7 +18,14 @@ async function getTotalArticleCount() {
   return result.result;
 }
 async function getArticles() {
-  const res = await fetch(`${process.env.BASE_URL}/api/articles`);
+  const cookieInstance = cookies();
+  const authorization = cookieInstance.get('THREADOSS_TOKEN');
+  if (!authorization) return [];
+  const res = await fetch(`${process.env.BASE_URL}/api/articles`, {
+    headers: {
+      authorization: authorization.value,
+    },
+  });
   if (!res.ok) {
     throw new Error('Failed to fetch articles');
   }

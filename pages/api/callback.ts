@@ -49,8 +49,22 @@ export default async function Callback(
   }
   // Use the data to create a new profile
   try {
-    const user = await prisma.user.create({
-      data: { username: data.username, token: code, codeVerifier },
+    console.log('Data>>>>>>>>>>>>>>>>>>>>', data);
+    const user = await prisma.user.upsert({
+      where: { username: data.username },
+      update: {
+        token: code,
+        codeVerifier,
+        name: data.name,
+        pictureUrl: data.profile_image_url,
+      },
+      create: {
+        username: data.username,
+        token: code,
+        codeVerifier,
+        name: data.name,
+        pictureUrl: data.profile_image_url,
+      },
     });
     const token = jwt.sign(
       {
