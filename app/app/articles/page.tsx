@@ -1,5 +1,5 @@
+import { ArticleDashboard } from '@/types';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { Article } from '@prisma/client';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 
@@ -31,7 +31,7 @@ async function getArticles() {
     throw new Error('Failed to fetch articles');
   }
   const result = await res.json();
-  return result.result as Article[];
+  return result.result as ArticleDashboard[];
 }
 
 export default async function Articles() {

@@ -1,19 +1,18 @@
 import { prisma } from '@/lib/prisma';
 import { validateRoute } from '@/lib/validateRoute';
-import { ArticleDashboard } from '@/types';
 import { User } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 /**
  * Get all user articles. For pagination pass `cursor` with id of the last element.
  */
-async function getAllUserArticles(
+async function getUserArticleIds(
   req: NextApiRequest,
   res: NextApiResponse,
   user: User
 ) {
   try {
-    const userArticles: ArticleDashboard[] = await prisma.article.findMany({
+    const userArticles: { id: number }[] = await prisma.article.findMany({
       where: {
         authorId: user.id,
       },
@@ -22,9 +21,6 @@ async function getAllUserArticles(
       },
       select: {
         id: true,
-        createdAt: true,
-        title: true,
-        url: true,
       },
     });
     return res.status(200).json({ result: userArticles });
@@ -33,4 +29,4 @@ async function getAllUserArticles(
   }
 }
 
-export default validateRoute(getAllUserArticles);
+export default validateRoute(getUserArticleIds);
