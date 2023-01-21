@@ -11,6 +11,7 @@ const initialState = {
 
 type ACTIONTYPE =
   | { type: 'UPDATE_URL'; payload: string }
+  | { type: 'CLEAR' }
   | { type: 'UPDATE_STATUS'; payload: 'LOADING' | 'SUCCESS' | 'ERROR' }
   | { type: 'UPDATE_THREADS'; payload: number };
 
@@ -22,6 +23,8 @@ function reducer(state: typeof initialState, action: ACTIONTYPE) {
       return { ...state, status: action.payload };
     case 'UPDATE_THREADS':
       return { ...state, threads: action.payload };
+    case 'CLEAR':
+      return { ...state, url: '', threads: 4, status: 'INIT' };
     default:
       throw new Error('No action type');
   }
@@ -43,7 +46,7 @@ export default function AddNewArticle() {
     })
       .then((res) => res.json())
       .then((_) => {
-        dispatch({ type: 'UPDATE_STATUS', payload: 'SUCCESS' });
+        dispatch({ type: 'CLEAR' });
       })
       .catch((e) => {
         dispatch({ type: 'UPDATE_STATUS', payload: 'ERROR' });

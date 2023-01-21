@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { MouseEvent, useState } from 'react';
 
 type GenerateThreadProps = {
@@ -11,6 +12,7 @@ export default function GenerateThread({
   articleId,
   threads,
 }: GenerateThreadProps) {
+  const router = useRouter();
   const [status, setStatus] = useState<
     'LOADING' | 'ERROR' | 'INIT' | 'SUCCESS'
   >('INIT');
@@ -30,7 +32,7 @@ export default function GenerateThread({
     }
     const data = await res.json();
     setStatus('SUCCESS');
-    return data.result;
+    router.refresh();
   }
 
   return (

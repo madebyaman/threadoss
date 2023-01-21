@@ -73,7 +73,13 @@ export default async function ViewArticle({
         {threads.length ? (
           <>
             {threads.map((thread) => (
-              <h2 key={thread.id}>{thread.content}</h2>
+              <div key={thread.id} className="mt-2">
+                {thread.content.map((tweet) => (
+                  <p key={tweet.substring(0, 15)} className="block">
+                    {tweet}
+                  </p>
+                ))}
+              </div>
             ))}
           </>
         ) : (

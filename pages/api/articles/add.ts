@@ -3,10 +3,11 @@ import { validateRoute } from '@/lib/validateRoute';
 import { ArticleData, extract } from '@extractus/article-extractor';
 import { Article, User } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { NodeHtmlMarkdown } from 'node-html-markdown';
 import { Configuration, OpenAIApi } from 'openai';
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
@@ -15,6 +16,7 @@ async function addArticle(
   res: NextApiResponse,
   user: User
 ) {
+  console.log('>>>>>>>>>>>>>>>>>>>>>>HERE<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
   // Check if request is 'POST'
   if (req.method !== 'POST') {
     res.status(405);
@@ -54,14 +56,18 @@ async function addArticle(
     if (!article || !article.content || !article.title) {
       return res.status(500).json({ error: 'Unable to parse' });
     }
+    const md = NodeHtmlMarkdown.translate(article.content);
     newArticle = await prisma.article.create({
       data: {
         authorId: user.id,
         url,
-        content: article.content,
+        content: md.substring(0, 5000),
         title: article.title,
       },
     });
+    console.log(
+      '>>>>>>>>>>>>>>>>>>>>>>>ADDED<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+    );
   } catch (e) {
     return res.status(500).json({ error: 'Server error' });
   }
@@ -76,25 +82,30 @@ async function addArticle(
     });
     return;
   }
+  console.log('Article generate continuing>>>>>>>>>>>>>>>>>>>>>>>');
 
   // Generate the thread
   let result: string | null = null;
   try {
     const completion = await openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: `Convert this article into 4 fun tweets. Begin each tweet with "Tweet: ". Add emojis and hashtags. Article:\n\n${article.content}`,
-      temperature: 0.6,
-      max_tokens: 50 * Number(totalTweets),
-      top_p: 1,
+      prompt: generatePrompt(newArticle.content, totalTweets),
+      temperature: 1,
+      max_tokens: 200 * Number(totalTweets),
+      top_p: 1.0,
       frequency_penalty: 0,
       presence_penalty: 0,
     });
-    if (completion.data.choices && completion.data.choices[0].text)
+
+    if (
+      completion &&
+      completion.data.choices &&
+      completion.data.choices[0].text
+    )
       result = completion.data.choices[0].text;
   } catch (e) {
-    console.log(e);
     res.status(500).json({
-      error: 'An error occurred during your request.',
+      error: 'AI Error: An error occurred during your request.',
     });
   }
 
@@ -103,9 +114,18 @@ async function addArticle(
     if (!result) {
       return res.status(500).json({ error: 'AI failure' });
     }
+    console.log('>>>>>>>>>>>>>>>>COMPLETIONT>>>>>>>>>>>>>>>>>>>>>>>', result);
+    // Tweets are in following variations: Tweet 1, Tweet #1, Tweet: . Also check for smaller case.
+    // Remove unwanted initial letters
+    const indexOfFirst = result.indexOf('Tweet: ');
+    const newResult = result.substring(indexOfFirst);
+    const threadContent = newResult
+      .toLowerCase()
+      .split('tweet: ')
+      .filter((item) => item.length !== 0);
     const thread = await prisma.thread.create({
       data: {
-        content: result,
+        content: threadContent,
         authorId: user.id,
         articleId: newArticle.id,
       },
@@ -116,6 +136,10 @@ async function addArticle(
       error: 'An error occurred during your request.',
     });
   }
+}
+
+function generatePrompt(article: string, tweet: number) {
+  return `Convert this article into a twitter thread with ${tweet} fun tweets. Begin each tweet with "Tweet: ". Add emojis and hashtags. Article: ${article}`;
 }
 
 export default validateRoute(addArticle);

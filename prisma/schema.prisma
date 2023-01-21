@@ -36,7 +36,7 @@ model Article {
 model Thread {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  content   String
+  content   String[]
   article   Article  @relation(fields: [articleId], references: [id])
   articleId Int
   user      User     @relation(fields: [authorId], references: [id])

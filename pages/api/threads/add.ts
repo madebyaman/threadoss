@@ -57,16 +57,15 @@ async function addArticle(
   if (!article) {
     return res.status(400).json({ error: 'No article with given id' });
   }
-  const md = NodeHtmlMarkdown.translate(article.content);
 
   // Generate the thread
   let result: string | null = null;
   try {
     const completion = await openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: generatePrompt(md.substring(0, 1000)),
-      temperature: 0.8,
-      max_tokens: 50 * Number(totalTweets),
+      prompt: generatePrompt(article.content, totalTweets),
+      temperature: 1,
+      max_tokens: 200 * Number(totalTweets),
       top_p: 1.0,
       frequency_penalty: 0,
       presence_penalty: 0,
@@ -89,9 +88,15 @@ async function addArticle(
     if (!result) {
       return res.status(500).json({ error: 'AI failure' });
     }
+    // Remove unwanted initial letters
+    const indexOfFirst = result.indexOf('Tweet: ');
+    const newResult = result.substring(indexOfFirst);
+    const threadContent = newResult
+      .split('Tweet: ')
+      .filter((item) => item.length !== 0);
     const thread = await prisma.thread.create({
       data: {
-        content: result,
+        content: threadContent,
         authorId: user.id,
         articleId: article.id,
       },
@@ -104,8 +109,8 @@ async function addArticle(
   }
 }
 
-function generatePrompt(article: string) {
-  return `Convert this article into a twitter thread with 4 fun tweets. Begin each tweet with "Tweet: ". Add emojis and hashtags. Article: ${article}`;
+function generatePrompt(article: string, tweet: number) {
+  return `Convert this article into a twitter thread with ${tweet} fun tweets. Begin each tweet with "Tweet: ". Add emojis and hashtags. Article: ${article}`;
 }
 
 export default validateRoute(addArticle);
