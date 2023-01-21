@@ -17,7 +17,8 @@ export default function Nav() {
               <LogoSmall className="block lg:hidden h-8 w-8" />
             </div>
             <Link
-              href={`${process.env.BASE_URL}/api/auth`}
+              href={`${process.env.BASE_URL}/login`}
+              target="_blank"
               className="hover:bg-slate-100 inline-flex text-gray-900 items-center px-3 py-1 rounded-full text-sm font-medium font-sans"
             >
               Signin

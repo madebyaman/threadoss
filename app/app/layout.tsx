@@ -1,8 +1,7 @@
-import Link from 'next/link';
 import { UserProfile } from '@/types';
 import { cookies } from 'next/headers';
-import AppNav from './AppNav';
-import SigninNav from './SigninNav';
+import AppNav from '../AppNav';
+import { ReactNode } from 'react';
 
 async function fetchProfile(): Promise<UserProfile | undefined> {
   const cookieInstance = cookies();
@@ -19,28 +18,21 @@ async function fetchProfile(): Promise<UserProfile | undefined> {
   const result = await res.json();
   return result.result as UserProfile;
 }
-export default async function Home() {
+export default async function AppLayout({ children }: { children: ReactNode }) {
   const user = await fetchProfile();
   return (
     <div className="min-h-full">
-      {user ? (
+      {user && (
         <AppNav
           name={user.name}
           username={user.username}
           picture={user.pictureUrl || undefined}
         />
-      ) : (
-        <SigninNav />
       )}
       <div className="py-10">
         <main>
           <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div className="py-4">
-              <Link className="block" href="/app/articles">
-                Articles
-              </Link>
-              <Link href="/api/auth">Login</Link>
-            </div>
+            <div className="py-4">{children}</div>
           </div>
         </main>
       </div>
