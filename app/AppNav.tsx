@@ -2,15 +2,16 @@
 
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Logo from './logo';
 import LogoSmall from './logo_small';
 
 const navigation = [
-  { name: 'Articles', href: '#', current: true },
-  { name: 'Profile', href: '#', current: false },
-  { name: 'Sign out', href: '/api/auth/logout', current: false },
+  { name: 'Articles', href: '/app/articles' },
+  { name: 'Profile', href: '/app/profile' },
+  { name: 'Sign out', href: '/api/auth/logout' },
 ];
 
 export function classNames(...classes: string[]): string {
@@ -24,6 +25,7 @@ type NavProps = {
 };
 
 export default function AppNav({ username, name, picture }: NavProps) {
+  const pathname = usePathname();
   return (
     <Disclosure as="nav" className="bg-white shadow-sm">
       {({ open }) => (
@@ -40,13 +42,14 @@ export default function AppNav({ username, name, picture }: NavProps) {
                     <Link
                       key={item.name}
                       href={item.href}
+                      prefetch={item.name === 'Sign out' && false}
                       className={classNames(
-                        item.current
+                        pathname === item.href
                           ? 'bg-indigo-100 text-indigo-900'
                           : 'hover:bg-slate-100',
                         'inline-flex text-gray-900 items-center px-3 py-1 rounded-full text-sm font-medium font-sans'
                       )}
-                      aria-current={item.current ? 'page' : undefined}
+                      aria-current={pathname === item.href ? 'page' : undefined}
                     >
                       {item.name}
                     </Link>
@@ -85,13 +88,14 @@ export default function AppNav({ username, name, picture }: NavProps) {
                   key={item.name}
                   as={Link}
                   href={item.href}
+                  prefetch={item.name === 'Sign out' && false}
                   className={classNames(
-                    item.current
+                    pathname === item.href
                       ? 'bg-indigo-100 text-indigo-900'
                       : 'hover:bg-slate-100',
                     'block pl-3 pr-4 py-2 rounded-full text-base font-medium text-center text-gray-900 font-sans'
                   )}
-                  aria-current={item.current ? 'page' : undefined}
+                  aria-current={pathname === item.href ? 'page' : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>

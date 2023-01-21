@@ -1,28 +1,6 @@
 import { Article } from '@prisma/client';
 import { cookies } from 'next/headers';
-
-async function getArticlesIds(): Promise<{ id: number }[]> {
-  const cookieInstance = cookies();
-  const authorization = cookieInstance.get('THREADOSS_TOKEN');
-  if (!authorization) return [];
-  const res = await fetch(`${process.env.BASE_URL}/api/articles/ids`, {
-    headers: {
-      authorization: authorization.value,
-    },
-  });
-  if (!res.ok) {
-    throw new Error('Failed to fetch article count');
-  }
-  const result = await res.json();
-  return result.result as { id: number }[];
-}
-
-export async function generateStaticParams() {
-  const articleIds = await getArticlesIds();
-  return articleIds.map((article) => ({
-    id: article.id.toString(),
-  }));
-}
+import Breadcrumb, { BreadcrumbType } from '../Breadcrumb';
 
 async function getArticle(id: string): Promise<Article | null> {
   const cookieInstance = cookies();
@@ -42,6 +20,22 @@ async function getArticle(id: string): Promise<Article | null> {
   const result = await res.json();
   return result.result as Article;
 }
+
+function getBreadcrumbData(title: string, id: string): BreadcrumbType[] {
+  return [
+    {
+      name: 'Articles',
+      link: `${process.env.BASE_URL}/app/articles`,
+      current: false,
+    },
+    {
+      name: title,
+      link: `${process.env.BASE_URL}/app/articles/${id}`,
+      current: true,
+    },
+  ];
+}
+
 export default async function ViewArticle({
   params,
 }: {
@@ -51,7 +45,10 @@ export default async function ViewArticle({
   if (!article) return <p>No article with such id</p>;
   return (
     <div>
-      <h1>{article.title}</h1>
+      <Breadcrumb items={getBreadcrumbData(article.title, params.id)} />
+      <h1 className="mt-4 text-xl md:text-3xl font-semibold">
+        {article.title}
+      </h1>
     </div>
   );
 }

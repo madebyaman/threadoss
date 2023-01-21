@@ -18,6 +18,7 @@ async function fetchProfile(): Promise<UserProfile | undefined> {
   const result = await res.json();
   return result.result as UserProfile;
 }
+
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const user = await fetchProfile();
   return (

@@ -6,14 +6,14 @@ import Link from 'next/link';
 async function getTotalArticleCount() {
   const cookieInstance = cookies();
   const authorization = cookieInstance.get('THREADOSS_TOKEN');
-  if (!authorization) return 0;
+  if (!authorization) return undefined;
   const res = await fetch(`${process.env.BASE_URL}/api/articles/count`, {
     headers: {
       authorization: authorization.value,
     },
   });
   if (!res.ok) {
-    throw new Error('Failed to fetch article count');
+    return undefined;
   }
   const result = await res.json();
   return result.result;
@@ -28,7 +28,7 @@ async function getArticles() {
     },
   });
   if (!res.ok) {
-    throw new Error('Failed to fetch articles');
+    return [];
   }
   const result = await res.json();
   return result.result as ArticleDashboard[];
@@ -132,43 +132,45 @@ export default async function Articles() {
                           {new Date(article.createdAt).toLocaleDateString()}
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <a
-                            href="#"
+                          <Link
+                            href={`/app/articles/${article.id}`}
                             className="text-indigo-600 hover:text-indigo-900"
                           >
                             View
-                          </a>
+                          </Link>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                <nav
-                  className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
-                  aria-label="Pagination"
-                >
-                  <div className="hidden sm:block">
-                    <p className="text-sm text-gray-700">
-                      Showing <span className="font-medium">1</span> to{' '}
-                      <span className="font-medium">10</span> of{' '}
-                      <span className="font-medium">{count}</span> results
-                    </p>
-                  </div>
-                  <div className="flex-1 flex justify-between sm:justify-end">
-                    <button
-                      className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                      // onClick={(e) => setArticles(e, 'PREVIOUS')}
-                    >
-                      Previous
-                    </button>
-                    <button
-                      // onClick={(e) => setArticles(e, 'NEXT')}
-                      className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </nav>
+                {count && (
+                  <nav
+                    className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
+                    aria-label="Pagination"
+                  >
+                    <div className="hidden sm:block">
+                      <p className="text-sm text-gray-700">
+                        Showing <span className="font-medium">1</span> to{' '}
+                        <span className="font-medium">10</span> of{' '}
+                        <span className="font-medium">{count}</span> results
+                      </p>
+                    </div>
+                    <div className="flex-1 flex justify-between sm:justify-end">
+                      <button
+                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                        // onClick={(e) => setArticles(e, 'PREVIOUS')}
+                      >
+                        Previous
+                      </button>
+                      <button
+                        // onClick={(e) => setArticles(e, 'NEXT')}
+                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </nav>
+                )}
               </div>
             ) : (
               <div className="bg-white rounded shadow-sm p-4 py-16">
