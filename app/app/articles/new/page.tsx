@@ -1,6 +1,6 @@
 'use client';
 
-import { classNames } from '@/app/DisclosureNav';
+import { classNames } from '@/app/AppNav';
 import { FormEvent, useReducer } from 'react';
 
 const initialState = {

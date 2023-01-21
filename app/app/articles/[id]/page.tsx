@@ -28,11 +28,14 @@ async function getArticle(id: string): Promise<Article | null> {
   const cookieInstance = cookies();
   const authorization = cookieInstance.get('THREADOSS_TOKEN');
   if (!authorization) return null;
-  const res = await fetch(`${process.env.BASE_URL}/api/articles/${id}`, {
-    headers: {
-      authorization: authorization.value,
-    },
-  });
+  const res = await fetch(
+    `${process.env.BASE_URL}/api/articles/article/${id}`,
+    {
+      headers: {
+        authorization: authorization.value,
+      },
+    }
+  );
   if (!res.ok) {
     throw new Error('Failed to fetch article count');
   }

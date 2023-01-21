@@ -23,7 +23,7 @@ type NavProps = {
   picture?: string;
 };
 
-export default function Nav({ name, username, picture }: NavProps) {
+export default function AppNav({ username, name, picture }: NavProps) {
   return (
     <Disclosure as="nav" className="bg-white shadow-sm">
       {({ open }) => (
