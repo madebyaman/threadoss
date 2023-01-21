@@ -30,5 +30,5 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       secure: process.env.NODE_ENV === 'production',
     })
   );
-  return res.status(200).json({ result: url });
+  return res.redirect(url);
 }
