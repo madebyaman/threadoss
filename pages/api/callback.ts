@@ -39,7 +39,11 @@ export default async function Callback(
       codeVerifier: codeVerifier,
       redirectUri: process.env.BASE_URL + '/callback',
     });
-    data = (await loggedClient.v2.me()).data;
+    data = (
+      await loggedClient.v2.me({
+        'user.fields': ['profile_image_url'],
+      })
+    ).data;
   } catch (e) {
     return res.status(500).json({ error: 'Twitter error' });
   }
@@ -49,14 +53,13 @@ export default async function Callback(
   }
   // Use the data to create a new profile
   try {
-    console.log('Data>>>>>>>>>>>>>>>>>>>>', data);
     const user = await prisma.user.upsert({
       where: { username: data.username },
       update: {
         token: code,
         codeVerifier,
         name: data.name,
-        pictureUrl: data.profile_image_url,
+        pictureUrl: data.profile_image_url?.replace('normal', '200x200'),
       },
       create: {
         username: data.username,

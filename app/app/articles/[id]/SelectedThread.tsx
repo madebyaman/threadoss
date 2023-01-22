@@ -1,14 +1,8 @@
 'use client';
 
 import { Thread } from '@prisma/client';
-import { useSearchParams } from 'next/navigation';
 
-export default function SelectedTweet({ threads }: { threads: Thread[] }) {
-  const searchParams = useSearchParams();
-  const currentThread = searchParams.get('thread');
-  const thread = threads.find((t) => t.id === Number(currentThread));
-
-  if (!currentThread || !thread) return null;
+export default function SelectedThread({ thread }: { thread: Thread }) {
   return (
     <aside className="flex">
       {/* Avatar */}

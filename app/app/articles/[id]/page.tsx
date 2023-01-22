@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Breadcrumb, { BreadcrumbType } from '../Breadcrumb';
 import GenerateThread from './GenerateThread';
 import SelectedTweet from './SelectedThread';
+import ThreadViewer from './ThreadViewer';
 
 async function getArticle(id: string): Promise<Article | null> {
   const cookieInstance = cookies();
@@ -73,45 +74,8 @@ export default async function ViewArticle({
           {article.title}
         </h1>
         <GenerateThread threads={threads.length} articleId={params.id} />
-        <div className="flex flex-col md:flex-row">
-          <div className="mt-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {threads.length ? (
-              <>
-                {threads.map((thread) => (
-                  <ThreadViewer
-                    thread={thread}
-                    key={thread.id}
-                    articleId={params.id}
-                  />
-                ))}
-              </>
-            ) : (
-              <>No threads found for this article. Generate a new one 🌱</>
-            )}
-          </div>
-          <SelectedTweet threads={threads} />
-        </div>
+        <ThreadViewer threads={threads} />
       </div>
     </div>
-  );
-}
-
-function ThreadViewer({
-  thread,
-  articleId,
-}: {
-  thread: Thread;
-  articleId: string;
-}) {
-  return (
-    <Link
-      href={{
-        pathname: `/app/articles/${articleId}`,
-        query: { thread: thread.id },
-      }}
-      className="bg-white p-4 border border-gray-300 hover:border-indigo-700 rounded-md cursor-pointer leading-relaxed"
-    >
-      {thread.content[0].substring(0, 100) + '...'}
-    </Link>
   );
 }
