@@ -11,7 +11,7 @@ import LogoSmall from './logo_small';
 const navigation = [
   { name: 'Articles', href: '/app/articles' },
   { name: 'Profile', href: '/app/profile' },
-  { name: 'Sign out', href: '/api/auth/logout' },
+  { name: 'Sign out', href: '/app/logout' },
 ];
 
 export function classNames(...classes: string[]): string {
@@ -42,7 +42,6 @@ export default function AppNav({ username, name, picture }: NavProps) {
                     <Link
                       key={item.name}
                       href={item.href}
-                      prefetch={item.name === 'Sign out' && false}
                       className={classNames(
                         pathname === item.href
                           ? 'bg-indigo-100 text-indigo-900'
@@ -88,7 +87,6 @@ export default function AppNav({ username, name, picture }: NavProps) {
                   key={item.name}
                   as={Link}
                   href={item.href}
-                  prefetch={item.name === 'Sign out' && false}
                   className={classNames(
                     pathname === item.href
                       ? 'bg-indigo-100 text-indigo-900'

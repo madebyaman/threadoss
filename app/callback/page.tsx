@@ -18,6 +18,8 @@ async function verifyUser({ state, code, signal }: CallbackProps) {
     },
     body: JSON.stringify({ state, code }),
     signal: signal,
+  }).then((res) => {
+    res.json();
   });
 }
 
@@ -41,10 +43,6 @@ export default function Callback() {
       return;
 
     verifyUser({ state, code, signal: controller.signal })
-      .then((res) => {
-        if (!res.ok) throw new Error('Error');
-        res.json();
-      })
       .then((res) => {
         mounted && setUserVerified(true);
         timer = setTimeout(() => {
