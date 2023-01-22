@@ -110,7 +110,7 @@ async function addArticle(
 }
 
 function generatePrompt(article: string, tweet: number) {
-  return `Convert this article into a twitter thread with ${tweet} fun tweets. Begin each tweet with "Tweet: ". Add emojis and hashtags. Article: ${article}`;
+  return `Convert this article into a twitter thread with ${tweet} fun tweets. Begin each tweet clearly marked with "Tweet: ". Add emojis and hashtags. Article: ${article}`;
 }
 
 export default validateRoute(addArticle);

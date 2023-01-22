@@ -1,7 +1,7 @@
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Spinner } from '../app/Spinner';
+import { Spinner } from '../Spinner';
 
 type CallbackProps = {
   state: string;

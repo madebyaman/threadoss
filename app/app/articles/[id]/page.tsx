@@ -1,7 +1,9 @@
 import { Article, Thread } from '@prisma/client';
 import { cookies } from 'next/headers';
+import Link from 'next/link';
 import Breadcrumb, { BreadcrumbType } from '../Breadcrumb';
 import GenerateThread from './GenerateThread';
+import SelectedTweet from './SelectedThread';
 
 async function getArticle(id: string): Promise<Article | null> {
   const cookieInstance = cookies();
@@ -65,28 +67,51 @@ export default async function ViewArticle({
   if (!article) return <p>No article with such id</p>;
   return (
     <div>
-      <Breadcrumb items={getBreadcrumbData(article.title, params.id)} />
-      <h1 className="mt-4 text-xl md:text-3xl font-semibold">
-        {article.title}
-      </h1>
-      <div className="mt-4">
-        {threads.length ? (
-          <>
-            {threads.map((thread) => (
-              <div key={thread.id} className="mt-2">
-                {thread.content.map((tweet) => (
-                  <p key={tweet.substring(0, 15)} className="block">
-                    {tweet}
-                  </p>
+      <div>
+        <Breadcrumb items={getBreadcrumbData(article.title, params.id)} />
+        <h1 className="mt-4 text-xl md:text-3xl font-semibold">
+          {article.title}
+        </h1>
+        <GenerateThread threads={threads.length} articleId={params.id} />
+        <div className="flex flex-col md:flex-row">
+          <div className="mt-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {threads.length ? (
+              <>
+                {threads.map((thread) => (
+                  <ThreadViewer
+                    thread={thread}
+                    key={thread.id}
+                    articleId={params.id}
+                  />
                 ))}
-              </div>
-            ))}
-          </>
-        ) : (
-          <>No threads found for this article. Generate a new one 🌱</>
-        )}
+              </>
+            ) : (
+              <>No threads found for this article. Generate a new one 🌱</>
+            )}
+          </div>
+          <SelectedTweet threads={threads} />
+        </div>
       </div>
-      <GenerateThread threads={threads.length} articleId={params.id} />
     </div>
+  );
+}
+
+function ThreadViewer({
+  thread,
+  articleId,
+}: {
+  thread: Thread;
+  articleId: string;
+}) {
+  return (
+    <Link
+      href={{
+        pathname: `/app/articles/${articleId}`,
+        query: { thread: thread.id },
+      }}
+      className="bg-white p-4 border border-gray-300 hover:border-indigo-700 rounded-md cursor-pointer leading-relaxed"
+    >
+      {thread.content[0].substring(0, 100) + '...'}
+    </Link>
   );
 }
